@@ -5,9 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-
-/* https://www.youtube.com/watch?v=SGZgvMwjq2U */
-
 namespace Snake
 {
     class Program
@@ -17,82 +14,80 @@ namespace Snake
             Console.WindowHeight = 16;
             Console.WindowWidth = 32;
 
-            int screenwidth = Console.WindowWidth;
-            int screenheight = Console.WindowHeight;
+            int screenHeight = Console.WindowHeight;
+            int screenWidth = Console.WindowWidth;
 
-            Random randomnummer = new Random();
+            Random randomNumber = new Random();
+            Pixel head = new Pixel();
 
             int score = 5;
             int gameover = 0;
+            
+            head.XPos = screenWidth / 2;
+            head.YPos = screenHeight / 2;
+            head.ScreenColor = ConsoleColor.Red;
 
-            pixel hoofd = new pixel();
+            List<int> xPosBody = new List<int>();
+            List<int> yPosBody = new List<int>();
 
-            hoofd.xpos = screenwidth / 2;
-            hoofd.ypos = screenheight / 2;
+            int xPosBerry = randomNumber.Next(0, screenWidth);
+            int yPosBerry = randomNumber.Next(0, screenHeight);
 
-            hoofd.schermkleur = ConsoleColor.Red;
+            DateTime time1 = DateTime.Now;
+            DateTime time2 = DateTime.Now;
 
             string movement = "RIGHT";
+            string isButtonPressed = "no";
 
-            List<int> xposlijf = new List<int>();
-            List<int> yposlijf = new List<int>();
-
-            int berryx = randomnummer.Next(0, screenwidth);
-            int berryy = randomnummer.Next(0, screenheight);
-
-            DateTime tijd = DateTime.Now;
-            DateTime tijd2 = DateTime.Now;
-
-            string buttonpressed = "no";
 
             while (true)
             {
                 Console.Clear();
 
-                if (hoofd.xpos == screenwidth - 1 || hoofd.xpos == 0 || hoofd.ypos == screenheight - 1 || hoofd.ypos == 0)
+                if (head.XPos == screenWidth - 1 || head.XPos == 0 || head.YPos == screenHeight - 1 || head.YPos == 0)
                 {
                     gameover = 1;
                 }
 
-                for (int i = 0; i < screenwidth; i++)
+                for (int i = 0; i < screenWidth; i++)
                 {
                     Console.SetCursorPosition(i, 0);
                     Console.Write("■");
                 }
 
-                for (int i = 0; i < screenwidth; i++)
+                for (int i = 0; i < screenWidth; i++)
                 {
-                    Console.SetCursorPosition(i, screenheight - 1);
+                    Console.SetCursorPosition(i, screenHeight - 1);
                     Console.Write("■");
                 }
 
-                for (int i = 0; i < screenheight; i++)
+                for (int i = 0; i < screenHeight; i++)
                 {
                     Console.SetCursorPosition(0, i);
                     Console.Write("■");
                 }
 
-                for (int i = 0; i < screenheight; i++)
+                for (int i = 0; i < screenHeight; i++)
                 {
-                    Console.SetCursorPosition(screenwidth - 1, i);
+                    Console.SetCursorPosition(screenWidth - 1, i);
                     Console.Write("■");
                 }
 
                 Console.ForegroundColor = ConsoleColor.Green;
 
-                if (berryx == hoofd.xpos && berryy == hoofd.ypos)
+                if (xPosBerry == head.XPos && yPosBerry == head.YPos)
                 {
                     score++;
-                    berryx = randomnummer.Next(1, screenwidth - 2);
-                    berryy = randomnummer.Next(1, screenheight - 2);
+                    xPosBerry = randomNumber.Next(1, screenWidth - 2);
+                    yPosBerry = randomNumber.Next(1, screenHeight - 2);
                 }
 
-                for (int i = 0; i < xposlijf.Count(); i++)
+                for (int i = 0; i < xPosBody.Count(); i++)
                 {
-                    Console.SetCursorPosition(xposlijf[i], yposlijf[i]);
+                    Console.SetCursorPosition(xPosBody[i], yPosBody[i]);
                     Console.Write("■");
 
-                    if (xposlijf[i] == hoofd.xpos && yposlijf[i] == hoofd.ypos)
+                    if (xPosBody[i] == head.XPos && yPosBody[i] == head.YPos)
                     {
                         gameover = 1;
                     }
@@ -103,89 +98,85 @@ namespace Snake
                     break;
                 }
 
-                Console.SetCursorPosition(hoofd.xpos, hoofd.ypos);
-                Console.ForegroundColor = hoofd.schermkleur;
+                Console.SetCursorPosition(head.XPos, head.YPos);
+                Console.ForegroundColor = head.ScreenColor;
                 Console.Write("■");
-                Console.SetCursorPosition(berryx, berryy);
+                Console.SetCursorPosition(xPosBerry, yPosBerry);
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("■");
-                tijd = DateTime.Now;
-                buttonpressed = "no";
+                time1 = DateTime.Now;
+                isButtonPressed = "no";
 
                 while (true)
                 {
-                    tijd2 = DateTime.Now;
-
-                    if (tijd2.Subtract(tijd).TotalMilliseconds > 500) { 
-                        break;
+                    time2 = DateTime.Now;
+                    if (time2.Subtract(time1).TotalMilliseconds > 500) 
+                    { 
+                        break; 
                     }
 
                     if (Console.KeyAvailable)
                     {
                         ConsoleKeyInfo toets = Console.ReadKey(true);
-                        //Console.WriteLine(toets.Key.ToString());
-                        if (toets.Key.Equals(ConsoleKey.UpArrow) && movement != "DOWN" && buttonpressed == "no")
+                        if (toets.Key.Equals(ConsoleKey.UpArrow) && movement != "DOWN" && isButtonPressed == "no")
                         {
                             movement = "UP";
-                            buttonpressed = "yes";
+                            isButtonPressed = "yes";
                         }
-
-                        if (toets.Key.Equals(ConsoleKey.DownArrow) && movement != "UP" && buttonpressed == "no")
+                        if (toets.Key.Equals(ConsoleKey.DownArrow) && movement != "UP" && isButtonPressed == "no")
                         {
                             movement = "DOWN";
-                            buttonpressed = "yes";
+                            isButtonPressed = "yes";
                         }
-
-                        if (toets.Key.Equals(ConsoleKey.LeftArrow) && movement != "RIGHT" && buttonpressed == "no")
+                        if (toets.Key.Equals(ConsoleKey.LeftArrow) && movement != "RIGHT" && isButtonPressed == "no")
                         {
                             movement = "LEFT";
-                            buttonpressed = "yes";
+                            isButtonPressed = "yes";
                         }
-
-                        if (toets.Key.Equals(ConsoleKey.RightArrow) && movement != "LEFT" && buttonpressed == "no")
+                        if (toets.Key.Equals(ConsoleKey.RightArrow) && movement != "LEFT" && isButtonPressed == "no")
                         {
                             movement = "RIGHT";
-                            buttonpressed = "yes";
+                            isButtonPressed = "yes";
                         }
                     }
                 }
 
-                xposlijf.Add(hoofd.xpos);
-                yposlijf.Add(hoofd.ypos);
+                xPosBody.Add(head.XPos);
+                yPosBody.Add(head.YPos);
 
                 switch (movement)
                 {
                     case "UP":
-                        hoofd.ypos--;
+                        head.YPos--;
                         break;
                     case "DOWN":
-                        hoofd.ypos++;
+                        head.YPos++;
                         break;
                     case "LEFT":
-                        hoofd.xpos--;
+                        head.XPos--;
                         break;
                     case "RIGHT":
-                        hoofd.xpos++;
+                        head.XPos++;
                         break;
                 }
 
-                if (xposlijf.Count() > score)
+                if (xPosBody.Count() > score)
                 {
-                    xposlijf.RemoveAt(0);
-                    yposlijf.RemoveAt(0);
+                    xPosBody.RemoveAt(0);
+                    yPosBody.RemoveAt(0);
                 }
             }
 
-            Console.SetCursorPosition(screenwidth / 5, screenheight / 2);
+            Console.SetCursorPosition(screenWidth / 5, screenHeight / 2);
             Console.WriteLine("Game over, Score: " + score);
-            Console.SetCursorPosition(screenwidth / 5, screenheight / 2 + 1);
+            Console.SetCursorPosition(screenWidth / 5, screenHeight / 2 + 1);
         }
-        
-        class pixel
+
+        class Pixel
         {
-            public int xpos { get; set; }
-            public int ypos { get; set; }
-            public ConsoleColor schermkleur { get; set; }
+            public int XPos { get; set; }
+            public int YPos { get; set; }
+            public ConsoleColor ScreenColor { get; set; }
         }
     }
 }
