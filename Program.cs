@@ -121,26 +121,9 @@ namespace Snake
         static void Render()
         {
             Console.Clear();
+
             DrawBorder(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-            Console.ForegroundColor = ConsoleColor.Green;
-
-            for (int i = 0; i < xPosBody.Count(); i++)
-            {
-                Console.SetCursorPosition(xPosBody[i], yPosBody[i]);
-                Console.Write(PIXEL_SYMBOL);
-
-                if (xPosBody[i] == head.Position.X && yPosBody[i] == head.Position.Y)
-                {
-                    isGameOver = true;
-                    return;
-                }
-            }
-
-            Console.SetCursorPosition(head.Position.X, head.Position.Y);
-            Console.ForegroundColor = head.Color;
-            Console.Write(PIXEL_SYMBOL);
-
+            DrawSnake();
             DrawBerry();
         }
 
@@ -210,6 +193,27 @@ namespace Snake
         {
             Console.SetCursorPosition(berry.Position.X, berry.Position.Y);
             Console.ForegroundColor = berry.Color;
+            Console.Write(PIXEL_SYMBOL);
+        }
+
+        static void DrawSnake()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            for (int i = 0; i < xPosBody.Count(); i++)
+            {
+                Console.SetCursorPosition(xPosBody[i], yPosBody[i]);
+                Console.Write(PIXEL_SYMBOL);
+
+                if (xPosBody[i] == head.Position.X && yPosBody[i] == head.Position.Y)
+                {
+                    isGameOver = true;
+                    return;
+                }
+            }
+
+            Console.SetCursorPosition(head.Position.X, head.Position.Y);
+            Console.ForegroundColor = head.Color;
             Console.Write(PIXEL_SYMBOL);
         }
     }
