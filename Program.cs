@@ -158,23 +158,6 @@ namespace Snake
                             movement = Direction.RIGHT;
                         break;
                 }
-
-                if (pressedKey.Equals(ConsoleKey.UpArrow) && movement != Direction.DOWN)
-                {
-                    movement = Direction.UP;
-                }
-                if (pressedKey.Equals(ConsoleKey.DownArrow) && movement != Direction.UP)
-                {
-                    movement = Direction.DOWN;
-                }
-                if (pressedKey.Equals(ConsoleKey.LeftArrow) && movement != Direction.RIGHT)
-                {
-                    movement = Direction.LEFT;
-                }
-                if (pressedKey.Equals(ConsoleKey.RightArrow) && movement != Direction.LEFT)
-                {
-                    movement = Direction.RIGHT;
-                }
             }
         }
 
