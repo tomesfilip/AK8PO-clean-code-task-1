@@ -11,7 +11,6 @@ namespace Snake
     {
         const int WINDOW_WIDTH = 32;
         const int WINDOW_HEIGHT = 16;
-
         const char PIXEL_SYMBOL = '■';
 
         enum Direction
@@ -36,121 +35,122 @@ namespace Snake
 
         static Pixel head;
         static Pixel berry;
+        static List<int> xPosBody = new List<int>();
+        static List<int> yPosBody = new List<int>();
 
         static Random randomNumber = new Random();
-
+        static Direction movement = Direction.RIGHT;
+        static int score = 5;
+        static bool isGameOver = false;
 
         static void Main(string[] args)
+        {
+            InitializeGame();
+            GameLoop();
+            ShowGameOverScreen();
+        }
+
+        static void InitializeGame()
         {
             Console.WindowWidth = WINDOW_WIDTH;
             Console.WindowHeight = WINDOW_HEIGHT;
 
-            int score = 5;
-            bool isGameOver = false;
-            
             head.Position.X = WINDOW_WIDTH / 2;
             head.Position.Y = WINDOW_HEIGHT / 2;
             head.Color = ConsoleColor.Red;
-            berry.Color = ConsoleColor.Blue;
-
-            List<int> xPosBody = new List<int>();
-            List<int> yPosBody = new List<int>();
 
             berry.Position.X = randomNumber.Next(0, WINDOW_WIDTH);
             berry.Position.Y = randomNumber.Next(0, WINDOW_HEIGHT);
+            berry.Color = ConsoleColor.Blue;
+        }
 
-            DateTime time1 = DateTime.Now;
-            DateTime time2 = DateTime.Now;
-
-            Direction movement = Direction.RIGHT;
-
-            while (true)
+        static void GameLoop()
+        {
+            while (!isGameOver)
             {
-                Console.Clear();
+                HandlePlayerInput();
+                UpdateGameState();
+                Render();
 
-                if (head.Position.X == WINDOW_WIDTH - 1 || head.Position.X == 0 || head.Position.Y == WINDOW_HEIGHT - 1 || head.Position.Y == 0)
-                {
-                    isGameOver = true;
-                }
+                Thread.Sleep(400);
+            }
+        }
 
-                DrawBorder(WINDOW_WIDTH, WINDOW_HEIGHT);
+        static void UpdateGameState()
+        {
+            if (head.Position.X == WINDOW_WIDTH - 1 || head.Position.X == 0 || head.Position.Y == WINDOW_HEIGHT - 1 || head.Position.Y == 0)
+            {
+                isGameOver = true;
+                return;
+            }
 
-                Console.ForegroundColor = ConsoleColor.Green;
+            if (head.Position.X == berry.Position.X && head.Position.Y == berry.Position.Y)
+            {
+                score++;
+                GenerateBerryPosition();
+            }
 
-                if (head.Position.X == berry.Position.X && head.Position.Y == berry.Position.Y)
-                {
-                    score++;
-                    GenerateBerryPosition();
-                }
 
-                for (int i = 0; i < xPosBody.Count(); i++)
-                {
-                    Console.SetCursorPosition(xPosBody[i], yPosBody[i]);
-                    Console.Write(PIXEL_SYMBOL);
+            xPosBody.Add(head.Position.X);
+            yPosBody.Add(head.Position.Y);
 
-                    if (xPosBody[i] == head.Position.X && yPosBody[i] == head.Position.Y)
-                    {
-                        isGameOver = true;
-                    }
-                }
-
-                if (isGameOver)
-                {
+            switch (movement)
+            {
+                case Direction.UP:
+                    head.Position.Y--;
                     break;
-                }
+                case Direction.DOWN:
+                    head.Position.Y++;
+                    break;
+                case Direction.LEFT:
+                    head.Position.X--;
+                    break;
+                case Direction.RIGHT:
+                    head.Position.X++;
+                    break;
+            }
 
-                Console.SetCursorPosition(head.Position.X, head.Position.Y);
-                Console.ForegroundColor = head.Color;
+            if (xPosBody.Count > score)
+            {
+                xPosBody.RemoveAt(0);
+                yPosBody.RemoveAt(0);
+            }
+        }
+
+        static void Render()
+        {
+            Console.Clear();
+            DrawBorder(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            for (int i = 0; i < xPosBody.Count(); i++)
+            {
+                Console.SetCursorPosition(xPosBody[i], yPosBody[i]);
                 Console.Write(PIXEL_SYMBOL);
 
-                DrawBerry();
-
-                time1 = DateTime.Now;
-
-                while (true)
+                if (xPosBody[i] == head.Position.X && yPosBody[i] == head.Position.Y)
                 {
-                    time2 = DateTime.Now;
-
-                    if (time2.Subtract(time1).TotalMilliseconds > 500)
-                    {
-                        break;
-                    }
-
-                    HandlePlayerInput(ref movement);
-                }
-
-                xPosBody.Add(head.Position.X);
-                yPosBody.Add(head.Position.Y);
-
-                switch (movement)
-                {
-                    case Direction.UP:
-                        head.Position.Y--;
-                        break;
-                    case Direction.DOWN:
-                        head.Position.Y++;
-                        break;
-                    case Direction.LEFT:
-                        head.Position.X--;
-                        break;
-                    case Direction.RIGHT:
-                        head.Position.X++;
-                        break;
-                }
-
-                if (xPosBody.Count() > score)
-                {
-                    xPosBody.RemoveAt(0);
-                    yPosBody.RemoveAt(0);
+                    isGameOver = true;
+                    return;
                 }
             }
 
+            Console.SetCursorPosition(head.Position.X, head.Position.Y);
+            Console.ForegroundColor = head.Color;
+            Console.Write(PIXEL_SYMBOL);
+
+            DrawBerry();
+        }
+
+        static void ShowGameOverScreen()
+        {
             Console.SetCursorPosition(WINDOW_WIDTH / 5, WINDOW_HEIGHT / 2);
             Console.WriteLine("Game over, Score: " + score);
             Console.SetCursorPosition(WINDOW_WIDTH / 5, WINDOW_HEIGHT / 2 + 1);
         }
 
-        private static void HandlePlayerInput(ref Direction movement)
+        static void HandlePlayerInput()
         {
             if (Console.KeyAvailable)
             {
