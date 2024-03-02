@@ -9,6 +9,11 @@ namespace Snake
 {
     class Program
     {
+        const int WINDOW_WIDTH = 32;
+        const int WINDOW_HEIGHT = 16;
+
+        const char PIXEL_SYMBOL = '■';
+
         enum Direction
         {
             UP,
@@ -30,31 +35,29 @@ namespace Snake
         }
 
         static Pixel head;
+        static Pixel berry;
 
-        const char SNAKE_SYMBOL = '■';
+        static Random randomNumber = new Random();
+
 
         static void Main(string[] args)
         {
-            Console.WindowHeight = 16;
-            Console.WindowWidth = 32;
-
-            int screenHeight = Console.WindowHeight;
-            int screenWidth = Console.WindowWidth;
-
-            Random randomNumber = new Random();
+            Console.WindowWidth = WINDOW_WIDTH;
+            Console.WindowHeight = WINDOW_HEIGHT;
 
             int score = 5;
             bool isGameOver = false;
             
-            head.Position.X = screenWidth / 2;
-            head.Position.Y = screenHeight / 2;
+            head.Position.X = WINDOW_WIDTH / 2;
+            head.Position.Y = WINDOW_HEIGHT / 2;
             head.Color = ConsoleColor.Red;
+            berry.Color = ConsoleColor.Blue;
 
             List<int> xPosBody = new List<int>();
             List<int> yPosBody = new List<int>();
 
-            int xPosBerry = randomNumber.Next(0, screenWidth);
-            int yPosBerry = randomNumber.Next(0, screenHeight);
+            berry.Position.X = randomNumber.Next(0, WINDOW_WIDTH);
+            berry.Position.Y = randomNumber.Next(0, WINDOW_HEIGHT);
 
             DateTime time1 = DateTime.Now;
             DateTime time2 = DateTime.Now;
@@ -65,26 +68,25 @@ namespace Snake
             {
                 Console.Clear();
 
-                if (head.Position.X == screenWidth - 1 || head.Position.X == 0 || head.Position.Y == screenHeight - 1 || head.Position.Y == 0)
+                if (head.Position.X == WINDOW_WIDTH - 1 || head.Position.X == 0 || head.Position.Y == WINDOW_HEIGHT - 1 || head.Position.Y == 0)
                 {
                     isGameOver = true;
                 }
 
-                DrawBorder(screenWidth, screenHeight);
+                DrawBorder(WINDOW_WIDTH, WINDOW_HEIGHT);
 
                 Console.ForegroundColor = ConsoleColor.Green;
 
-                if (xPosBerry == head.Position.X && yPosBerry == head.Position.Y)
+                if (head.Position.X == berry.Position.X && head.Position.Y == berry.Position.Y)
                 {
                     score++;
-                    xPosBerry = randomNumber.Next(1, screenWidth - 2);
-                    yPosBerry = randomNumber.Next(1, screenHeight - 2);
+                    GenerateBerryPosition();
                 }
 
                 for (int i = 0; i < xPosBody.Count(); i++)
                 {
                     Console.SetCursorPosition(xPosBody[i], yPosBody[i]);
-                    Console.Write(SNAKE_SYMBOL);
+                    Console.Write(PIXEL_SYMBOL);
 
                     if (xPosBody[i] == head.Position.X && yPosBody[i] == head.Position.Y)
                     {
@@ -99,10 +101,10 @@ namespace Snake
 
                 Console.SetCursorPosition(head.Position.X, head.Position.Y);
                 Console.ForegroundColor = head.Color;
-                Console.Write(SNAKE_SYMBOL);
-                Console.SetCursorPosition(xPosBerry, yPosBerry);
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write(SNAKE_SYMBOL);
+                Console.Write(PIXEL_SYMBOL);
+
+                DrawBerry();
+
                 time1 = DateTime.Now;
 
                 while (true)
@@ -143,9 +145,9 @@ namespace Snake
                 }
             }
 
-            Console.SetCursorPosition(screenWidth / 5, screenHeight / 2);
+            Console.SetCursorPosition(WINDOW_WIDTH / 5, WINDOW_HEIGHT / 2);
             Console.WriteLine("Game over, Score: " + score);
-            Console.SetCursorPosition(screenWidth / 5, screenHeight / 2 + 1);
+            Console.SetCursorPosition(WINDOW_WIDTH / 5, WINDOW_HEIGHT / 2 + 1);
         }
 
         private static void HandlePlayerInput(ref Direction movement)
@@ -178,21 +180,36 @@ namespace Snake
 
         static void DrawBorder(int width, int height)
         {
+            Console.ForegroundColor = ConsoleColor.White;
+
             for (int i = 0; i < width; i++)
             {
                 Console.SetCursorPosition(i, 0);
-                Console.Write(SNAKE_SYMBOL);
+                Console.Write(PIXEL_SYMBOL);
                 Console.SetCursorPosition(i, height - 1);
-                Console.Write(SNAKE_SYMBOL);
+                Console.Write(PIXEL_SYMBOL);
             }
 
             for (int i = 0; i < height; i++)
             {
                 Console.SetCursorPosition(0, i);
-                Console.Write(SNAKE_SYMBOL);
+                Console.Write(PIXEL_SYMBOL);
                 Console.SetCursorPosition(width - 1, i);
-                Console.Write(SNAKE_SYMBOL);
+                Console.Write(PIXEL_SYMBOL);
             }
+        }
+
+        static void GenerateBerryPosition()
+        {
+            berry.Position.X = randomNumber.Next(1, WINDOW_WIDTH - 1);
+            berry.Position.Y = randomNumber.Next(1, WINDOW_HEIGHT - 1);
+        }
+
+        static void DrawBerry()
+        {
+            Console.SetCursorPosition(berry.Position.X, berry.Position.Y);
+            Console.ForegroundColor = berry.Color;
+            Console.Write(PIXEL_SYMBOL);
         }
     }
 }
