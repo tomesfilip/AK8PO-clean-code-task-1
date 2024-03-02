@@ -7,6 +7,14 @@ using System.Threading;
 
 namespace Snake
 {
+    enum Direction
+    {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -36,7 +44,7 @@ namespace Snake
             DateTime time1 = DateTime.Now;
             DateTime time2 = DateTime.Now;
 
-            string movement = "RIGHT";
+            Direction movement = Direction.RIGHT;
             bool isButtonPressed = false;
 
 
@@ -97,24 +105,24 @@ namespace Snake
                     if (Console.KeyAvailable)
                     {
                         ConsoleKeyInfo toets = Console.ReadKey(true);
-                        if (toets.Key.Equals(ConsoleKey.UpArrow) && movement != "DOWN" && !isButtonPressed)
+                        if (toets.Key.Equals(ConsoleKey.UpArrow) && movement != Direction.DOWN && !isButtonPressed)
                         {
-                            movement = "UP";
+                            movement = Direction.UP;
                             isButtonPressed = true;
                         }
-                        if (toets.Key.Equals(ConsoleKey.DownArrow) && movement != "UP" && !isButtonPressed)
+                        if (toets.Key.Equals(ConsoleKey.DownArrow) && movement != Direction.UP && !isButtonPressed)
                         {
-                            movement = "DOWN";
+                            movement = Direction.DOWN;
                             isButtonPressed = true;
                         }
-                        if (toets.Key.Equals(ConsoleKey.LeftArrow) && movement != "RIGHT" && !isButtonPressed)
+                        if (toets.Key.Equals(ConsoleKey.LeftArrow) && movement != Direction.RIGHT && !isButtonPressed)
                         {
-                            movement = "LEFT";
+                            movement = Direction.LEFT;
                             isButtonPressed = true;
                         }
-                        if (toets.Key.Equals(ConsoleKey.RightArrow) && movement != "LEFT" && !isButtonPressed)
+                        if (toets.Key.Equals(ConsoleKey.RightArrow) && movement != Direction.LEFT && !isButtonPressed)
                         {
-                            movement = "RIGHT";
+                            movement = Direction.RIGHT;
                             isButtonPressed = true;
                         }
                     }
@@ -125,16 +133,16 @@ namespace Snake
 
                 switch (movement)
                 {
-                    case "UP":
+                    case Direction.UP:
                         head.YPos--;
                         break;
-                    case "DOWN":
+                    case Direction.DOWN:
                         head.YPos++;
                         break;
-                    case "LEFT":
+                    case Direction.LEFT:
                         head.XPos--;
                         break;
-                    case "RIGHT":
+                    case Direction.RIGHT:
                         head.XPos++;
                         break;
                 }
