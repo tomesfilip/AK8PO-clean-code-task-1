@@ -7,16 +7,18 @@ using System.Threading;
 
 namespace Snake
 {
-    enum Direction
-    {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
-
     class Program
     {
+        enum Direction
+        {
+            UP,
+            DOWN,
+            LEFT,
+            RIGHT
+        }
+
+        const char SNAKE_SYMBOL = '■';
+
         static void Main(string[] args)
         {
             Console.WindowHeight = 16;
@@ -69,7 +71,7 @@ namespace Snake
                 for (int i = 0; i < xPosBody.Count(); i++)
                 {
                     Console.SetCursorPosition(xPosBody[i], yPosBody[i]);
-                    Console.Write("■");
+                    Console.Write(SNAKE_SYMBOL);
 
                     if (xPosBody[i] == head.XPos && yPosBody[i] == head.YPos)
                     {
@@ -84,10 +86,10 @@ namespace Snake
 
                 Console.SetCursorPosition(head.XPos, head.YPos);
                 Console.ForegroundColor = head.ScreenColor;
-                Console.Write("■");
+                Console.Write(SNAKE_SYMBOL);
                 Console.SetCursorPosition(xPosBerry, yPosBerry);
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("■");
+                Console.Write(SNAKE_SYMBOL);
                 time1 = DateTime.Now;
 
                 while (true)
@@ -173,17 +175,17 @@ namespace Snake
             for (int i = 0; i < width; i++)
             {
                 Console.SetCursorPosition(i, 0);
-                Console.Write("■");
+                Console.Write(SNAKE_SYMBOL);
                 Console.SetCursorPosition(i, height - 1);
-                Console.Write("■");
+                Console.Write(SNAKE_SYMBOL);
             }
 
             for (int i = 0; i < height; i++)
             {
                 Console.SetCursorPosition(0, i);
-                Console.Write("■");
+                Console.Write(SNAKE_SYMBOL);
                 Console.SetCursorPosition(width - 1, i);
-                Console.Write("■");
+                Console.Write(SNAKE_SYMBOL);
             }
         }
     }
