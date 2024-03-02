@@ -12,6 +12,7 @@ namespace Snake
         const int WINDOW_WIDTH = 32;
         const int WINDOW_HEIGHT = 16;
         const char PIXEL_SYMBOL = '■';
+        const int TICK_DURATION = 400;
 
         enum Direction
         {
@@ -72,7 +73,7 @@ namespace Snake
                 UpdateGameState();
                 Render();
 
-                Thread.Sleep(400);
+                Thread.Sleep(TICK_DURATION);
             }
         }
 
