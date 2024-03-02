@@ -17,6 +17,20 @@ namespace Snake
             RIGHT
         }
 
+        struct Position
+        {
+            public int X;
+            public int Y;
+        }
+
+        struct Pixel
+        {
+            public Position Position;
+            public ConsoleColor Color;
+        }
+
+        static Pixel head;
+
         const char SNAKE_SYMBOL = '■';
 
         static void Main(string[] args)
@@ -28,14 +42,13 @@ namespace Snake
             int screenWidth = Console.WindowWidth;
 
             Random randomNumber = new Random();
-            Pixel head = new Pixel();
 
             int score = 5;
             bool isGameOver = false;
             
-            head.XPos = screenWidth / 2;
-            head.YPos = screenHeight / 2;
-            head.ScreenColor = ConsoleColor.Red;
+            head.Position.X = screenWidth / 2;
+            head.Position.Y = screenHeight / 2;
+            head.Color = ConsoleColor.Red;
 
             List<int> xPosBody = new List<int>();
             List<int> yPosBody = new List<int>();
@@ -52,7 +65,7 @@ namespace Snake
             {
                 Console.Clear();
 
-                if (head.XPos == screenWidth - 1 || head.XPos == 0 || head.YPos == screenHeight - 1 || head.YPos == 0)
+                if (head.Position.X == screenWidth - 1 || head.Position.X == 0 || head.Position.Y == screenHeight - 1 || head.Position.Y == 0)
                 {
                     isGameOver = true;
                 }
@@ -61,7 +74,7 @@ namespace Snake
 
                 Console.ForegroundColor = ConsoleColor.Green;
 
-                if (xPosBerry == head.XPos && yPosBerry == head.YPos)
+                if (xPosBerry == head.Position.X && yPosBerry == head.Position.Y)
                 {
                     score++;
                     xPosBerry = randomNumber.Next(1, screenWidth - 2);
@@ -73,7 +86,7 @@ namespace Snake
                     Console.SetCursorPosition(xPosBody[i], yPosBody[i]);
                     Console.Write(SNAKE_SYMBOL);
 
-                    if (xPosBody[i] == head.XPos && yPosBody[i] == head.YPos)
+                    if (xPosBody[i] == head.Position.X && yPosBody[i] == head.Position.Y)
                     {
                         isGameOver = true;
                     }
@@ -84,8 +97,8 @@ namespace Snake
                     break;
                 }
 
-                Console.SetCursorPosition(head.XPos, head.YPos);
-                Console.ForegroundColor = head.ScreenColor;
+                Console.SetCursorPosition(head.Position.X, head.Position.Y);
+                Console.ForegroundColor = head.Color;
                 Console.Write(SNAKE_SYMBOL);
                 Console.SetCursorPosition(xPosBerry, yPosBerry);
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -104,22 +117,22 @@ namespace Snake
                     HandlePlayerInput(ref movement);
                 }
 
-                xPosBody.Add(head.XPos);
-                yPosBody.Add(head.YPos);
+                xPosBody.Add(head.Position.X);
+                yPosBody.Add(head.Position.Y);
 
                 switch (movement)
                 {
                     case Direction.UP:
-                        head.YPos--;
+                        head.Position.Y--;
                         break;
                     case Direction.DOWN:
-                        head.YPos++;
+                        head.Position.Y++;
                         break;
                     case Direction.LEFT:
-                        head.XPos--;
+                        head.Position.X--;
                         break;
                     case Direction.RIGHT:
-                        head.XPos++;
+                        head.Position.X++;
                         break;
                 }
 
@@ -161,13 +174,6 @@ namespace Snake
                         break;
                 }
             }
-        }
-
-        class Pixel
-        {
-            public int XPos { get; set; }
-            public int YPos { get; set; }
-            public ConsoleColor ScreenColor { get; set; }
         }
 
         static void DrawBorder(int width, int height)
