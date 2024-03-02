@@ -21,7 +21,7 @@ namespace Snake
             Pixel head = new Pixel();
 
             int score = 5;
-            int gameover = 0;
+            bool isGameOver = false;
             
             head.XPos = screenWidth / 2;
             head.YPos = screenHeight / 2;
@@ -46,32 +46,10 @@ namespace Snake
 
                 if (head.XPos == screenWidth - 1 || head.XPos == 0 || head.YPos == screenHeight - 1 || head.YPos == 0)
                 {
-                    gameover = 1;
+                    isGameOver = true;
                 }
 
-                for (int i = 0; i < screenWidth; i++)
-                {
-                    Console.SetCursorPosition(i, 0);
-                    Console.Write("■");
-                }
-
-                for (int i = 0; i < screenWidth; i++)
-                {
-                    Console.SetCursorPosition(i, screenHeight - 1);
-                    Console.Write("■");
-                }
-
-                for (int i = 0; i < screenHeight; i++)
-                {
-                    Console.SetCursorPosition(0, i);
-                    Console.Write("■");
-                }
-
-                for (int i = 0; i < screenHeight; i++)
-                {
-                    Console.SetCursorPosition(screenWidth - 1, i);
-                    Console.Write("■");
-                }
+                DrawBorder(screenWidth, screenHeight);
 
                 Console.ForegroundColor = ConsoleColor.Green;
 
@@ -89,11 +67,11 @@ namespace Snake
 
                     if (xPosBody[i] == head.XPos && yPosBody[i] == head.YPos)
                     {
-                        gameover = 1;
+                        isGameOver = true;
                     }
                 }
 
-                if (gameover == 1)
+                if (isGameOver)
                 {
                     break;
                 }
@@ -110,6 +88,7 @@ namespace Snake
                 while (true)
                 {
                     time2 = DateTime.Now;
+
                     if (time2.Subtract(time1).TotalMilliseconds > 500) 
                     { 
                         break; 
@@ -177,6 +156,25 @@ namespace Snake
             public int XPos { get; set; }
             public int YPos { get; set; }
             public ConsoleColor ScreenColor { get; set; }
+        }
+
+        static void DrawBorder(int width, int height)
+        {
+            for (int i = 0; i < width; i++)
+            {
+                Console.SetCursorPosition(i, 0);
+                Console.Write("■");
+                Console.SetCursorPosition(i, height - 1);
+                Console.Write("■");
+            }
+
+            for (int i = 0; i < height; i++)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write("■");
+                Console.SetCursorPosition(width - 1, i);
+                Console.Write("■");
+            }
         }
     }
 }
