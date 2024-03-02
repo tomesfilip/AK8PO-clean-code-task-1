@@ -45,8 +45,6 @@ namespace Snake
             DateTime time2 = DateTime.Now;
 
             Direction movement = Direction.RIGHT;
-            bool isButtonPressed = false;
-
 
             while (true)
             {
@@ -91,41 +89,17 @@ namespace Snake
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("■");
                 time1 = DateTime.Now;
-                isButtonPressed = false;
 
                 while (true)
                 {
                     time2 = DateTime.Now;
 
-                    if (time2.Subtract(time1).TotalMilliseconds > 500) 
-                    { 
-                        break; 
+                    if (time2.Subtract(time1).TotalMilliseconds > 500)
+                    {
+                        break;
                     }
 
-                    if (Console.KeyAvailable)
-                    {
-                        ConsoleKeyInfo toets = Console.ReadKey(true);
-                        if (toets.Key.Equals(ConsoleKey.UpArrow) && movement != Direction.DOWN && !isButtonPressed)
-                        {
-                            movement = Direction.UP;
-                            isButtonPressed = true;
-                        }
-                        if (toets.Key.Equals(ConsoleKey.DownArrow) && movement != Direction.UP && !isButtonPressed)
-                        {
-                            movement = Direction.DOWN;
-                            isButtonPressed = true;
-                        }
-                        if (toets.Key.Equals(ConsoleKey.LeftArrow) && movement != Direction.RIGHT && !isButtonPressed)
-                        {
-                            movement = Direction.LEFT;
-                            isButtonPressed = true;
-                        }
-                        if (toets.Key.Equals(ConsoleKey.RightArrow) && movement != Direction.LEFT && !isButtonPressed)
-                        {
-                            movement = Direction.RIGHT;
-                            isButtonPressed = true;
-                        }
-                    }
+                    HandlePlayerInput(ref movement);
                 }
 
                 xPosBody.Add(head.XPos);
@@ -157,6 +131,51 @@ namespace Snake
             Console.SetCursorPosition(screenWidth / 5, screenHeight / 2);
             Console.WriteLine("Game over, Score: " + score);
             Console.SetCursorPosition(screenWidth / 5, screenHeight / 2 + 1);
+        }
+
+        private static void HandlePlayerInput(ref Direction movement)
+        {
+            if (Console.KeyAvailable)
+            {
+                ConsoleKey pressedKey = Console.ReadKey(true).Key;
+
+                switch (pressedKey)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (movement != Direction.DOWN)
+                            movement = Direction.UP;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (movement != Direction.UP)
+                            movement = Direction.DOWN;
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        if (movement != Direction.RIGHT)
+                            movement = Direction.LEFT;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if (movement != Direction.LEFT)
+                            movement = Direction.RIGHT;
+                        break;
+                }
+
+                if (pressedKey.Equals(ConsoleKey.UpArrow) && movement != Direction.DOWN)
+                {
+                    movement = Direction.UP;
+                }
+                if (pressedKey.Equals(ConsoleKey.DownArrow) && movement != Direction.UP)
+                {
+                    movement = Direction.DOWN;
+                }
+                if (pressedKey.Equals(ConsoleKey.LeftArrow) && movement != Direction.RIGHT)
+                {
+                    movement = Direction.LEFT;
+                }
+                if (pressedKey.Equals(ConsoleKey.RightArrow) && movement != Direction.LEFT)
+                {
+                    movement = Direction.RIGHT;
+                }
+            }
         }
 
         class Pixel
